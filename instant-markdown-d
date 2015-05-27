@@ -39,6 +39,7 @@ function writeMarkdown(input, output) {
   });
   input.on('end', function() {
     lastContent = body;
+    output.emit('newPlainContent', body);
     output.emit('newContent', md.render(body));
   });
 }

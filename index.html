@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Language" content="en">
   <link rel="stylesheet" type="text/css" href="/github-syntax-highlight.css">
   <link rel="stylesheet" type="text/css" href="/github-markdown.css">
+  <link rel="stylesheet" type="text/css" href="/countable.css">
   <style>
     .markdown-body {
       min-width: 200px;
@@ -21,6 +22,11 @@
       socket.on('newContent', function(newHTML) {
         document.querySelector(".markdown-body").innerHTML = newHTML;
       });
+      socket.on('newPlainContent', function(newPlainContent) {
+        var textarea = document.getElementsByClassName('plainText')[0]
+        textarea.value = newPlainContent;
+        window.countIt();
+      });
       socket.on('die', function(newHTML) {
         window.open('', '_self', '');
         window.close();
@@ -33,10 +39,14 @@
       });
     });
   </script>
+  <script src="node_modules/countable/Countable.js"></script>
 </head>
 <body>
   <div class="wrapper">
     <div class="container">
+      <aside class="countable-info">
+        <div class="count"></div>
+      </aside>
       <div class="repository-with-sidebar repo-container new-discussion-timeline with-full-navigation">
         <div id="js-repo-pjax-container" class="repository-content context-loader-container">
           <div id="readme" class="boxed-group flush clearfix announce instapaper_body md">
@@ -46,5 +56,26 @@
       </div>
     </div>
   </div>
+  <textarea class="plainText"></textarea>
+  <script>
+    var area = document.getElementsByClassName('plainText')[0];
+    var div = document.getElementsByClassName('count')[0];
+    window.countIt = function() {
+      function callback(counter) {
+        var info = '';
+        info += '<p>'+counter.words + ' words.</p>';
+        info += '<p>'+counter.sentences + ' sentences.</p>';
+        info += '<p>'+counter.paragraphs + ' paragraphs.</p>';
+        info += '<p>'+counter.characters + ' chars (w/o spaces).</p>';
+        info += '<p>'+counter.all + ' chars (w/ spaces).</p>';
+        div.innerHTML = info;
+      }
+
+      Countable.once(area, callback);
+    };
+    window.onload = function() {
+      window.countIt();
+    };
+  </script>
 </body>
 </html>
