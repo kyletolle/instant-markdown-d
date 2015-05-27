@@ -8,7 +8,8 @@ var server = require('http').createServer(httpHandler),
     io = require('socket.io').listen(server),
     send = require('send'),
     server,
-    socket;
+    socket,
+    lastContent = '';
 
 server.listen(8090);
 
@@ -37,6 +38,7 @@ function writeMarkdown(input, output) {
     }
   });
   input.on('end', function() {
+    lastContent = body;
     output.emit('newContent', md.render(body));
   });
 }
@@ -89,6 +91,8 @@ io.sockets.on('connection', function(sock){
   socket = sock;
   process.stdout.write('connection established!\n');
   writeMarkdown(process.stdin, socket);
+  socket.emit('newPlainContent', lastContent);
+  socket.emit('newContent', md.render(lastContent));
   process.stdin.resume();
 });
 
