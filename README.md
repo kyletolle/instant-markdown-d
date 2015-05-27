@@ -14,3 +14,27 @@ REST API
 | Close Webpage    | DELETE      | http://localhost:\<port\> | |
 
 By default, `<port>` is 8090
+
+Note: I think the `port` is hard coded and not actually an option.
+
+Node Version
+------------
+
+This seems to require node 0.12.x
+
+Development
+-----------
+
+`npm install`
+
+Running
+-------
+
+In the foreground:
+
+- `./instant-markdown-d &>/dev/null`
+
+In the background:
+
+- `./instant-markdown-d &>/dev/null &`
+
