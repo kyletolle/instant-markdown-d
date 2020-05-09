@@ -9,7 +9,7 @@ var server = require('http').createServer(httpHandler),
     send = require('send'),
     server,
     socket,
-    lastContent = '';
+    lastContent = '# Ready!';
 
 server.listen(8090);
 
@@ -91,15 +91,15 @@ io.set('log level', 1);
 io.sockets.on('connection', function(sock){
   socket = sock;
   process.stdout.write('connection established!\n');
-  writeMarkdown(process.stdin, socket);
   socket.emit('newPlainContent', lastContent);
   socket.emit('newContent', md.render(lastContent));
+  writeMarkdown(process.stdin, socket);
   process.stdin.resume();
 });
 
 
 if (process.platform.toLowerCase().indexOf('darwin') >= 0){
-  exec('open -g http://localhost:8090', function(error, stdout, stderr){});
+  // exec('open -g http://localhost:8090', function(error, stdout, stderr){});
 }
 else {  // assume unix/linux
   exec('xdg-open http://localhost:8090', function(error, stdout, stderr){});
